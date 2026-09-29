@@ -23,7 +23,8 @@ This table is a design target for investigation, not a statement of completed su
 | Environment | `getenv` | investigate | Map to available C/AmigaOS facilities |
 | Options | `getopt`, `getopt_long` | investigate | Header/library compatibility if needed |
 | Line input | `getline`, `getdelim` | library | Implemented as `amposix_getline` / `amposix_getdelim`; optional POSIX-name macros |
-| Strings | `strdup`, `strndup` | investigate | Small compatibility implementations where absent |
+| Strings | `strdup`, `strndup` | library | Implemented with optional POSIX-name macros |
+| BSD strings | `strlcpy`, `strlcat` | library | Explicit BSD extensions; optional BSD-name macros |
 | Time | `clock_gettime` | investigate | Map honestly to Amiga timing facilities |
 | Sleep | `sleep`, `usleep`, `nanosleep` | investigate | Map to appropriate timing primitives |
 | Networking | `socket`, `connect`, `send`, `recv` | investigate | Native socket stack integration |
@@ -51,3 +52,7 @@ This table is a design target for investigation, not a statement of completed su
 The first concrete `libamposix` compatibility functions are `amposix_getline()` and `amposix_getdelim()`. They use ordinary C `FILE *`, dynamically grow caller-owned buffers, preserve the delimiter, NUL-terminate the result, return `-1` at EOF before any bytes are read, and report invalid arguments through `errno`.
 
 By default AmPOSIX does not replace host libc symbols. A port may define `AMPOSIX_ENABLE_POSIX_NAMES` before including `<amposix/stdio.h>` to map `getline` and `getdelim` to the compatibility implementation.
+
+### String compatibility
+
+`<amposix/string.h>` provides `amposix_strdup()`, `amposix_strndup()`, `amposix_strlcpy()` and `amposix_strlcat()`. POSIX names are opt-in through `AMPOSIX_ENABLE_POSIX_NAMES`; BSD extension names are separately opt-in through `AMPOSIX_ENABLE_BSD_NAMES`. This distinction is intentional: AmPOSIX does not describe `strlcpy` or `strlcat` as POSIX interfaces.
