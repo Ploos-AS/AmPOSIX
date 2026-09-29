@@ -1,0 +1,8 @@
+; AmPOSIX classic AmigaOS qualification launcher
+; amiga-runtime executes this from TEST: during boot.
+TEST:amposix-qualification >TEST:amposix-qualification.log
+IF WARN
+  ECHO "AMPOSIX-RC-FAIL" >>TEST:amposix-qualification.log
+ELSE
+  ECHO "AMPOSIX-RC-PASS" >>TEST:amposix-qualification.log
+ENDIF
