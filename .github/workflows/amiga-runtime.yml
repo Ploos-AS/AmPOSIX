@@ -1,0 +1,30 @@
+name: Amiga runtime qualification
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: read
+jobs:
+  build-q1:
+    uses: ./.github/workflows/amiga-smoke.yml
+  qualify-a500:
+    needs: build-q1
+    uses: Ploos-AS/amiga-runtime/.github/workflows/reusable-project-qualify.yml@9652682772ab57383bc10eee1cf7d6d88ff9d9c5
+    with:
+      payload_artifact: amposix-amiga-q1
+      profile: a500-os204
+      runtime_image: ghcr.io/ploos-as/amiga-runtime:sha-9652682
+  qualify-a500plus:
+    needs: build-q1
+    uses: Ploos-AS/amiga-runtime/.github/workflows/reusable-project-qualify.yml@9652682772ab57383bc10eee1cf7d6d88ff9d9c5
+    with:
+      payload_artifact: amposix-amiga-q1
+      profile: a500plus-os2
+      runtime_image: ghcr.io/ploos-as/amiga-runtime:sha-9652682
+  qualify-a1200:
+    needs: build-q1
+    uses: Ploos-AS/amiga-runtime/.github/workflows/reusable-project-qualify.yml@9652682772ab57383bc10eee1cf7d6d88ff9d9c5
+    with:
+      payload_artifact: amposix-amiga-q1
+      profile: a1200-020-os3
+      runtime_image: ghcr.io/ploos-as/amiga-runtime:sha-9652682
