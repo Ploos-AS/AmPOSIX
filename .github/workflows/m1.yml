@@ -1,23 +1,17 @@
 name: M1
-
 on:
   push:
   pull_request:
-
 permissions:
   contents: read
-
 jobs:
-  scanner:
+  c-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Validate feature database
-        run: python -m json.tool data/features.json >/dev/null
-      - name: Run unit tests
-        run: python -m unittest discover -s tests -v
+      - name: Build
+        run: make
+      - name: Test
+        run: make test
       - name: Scanner smoke test
-        run: python tools/amposix scan tests/fixtures
+        run: ./build/amposix scan tests/fixtures/sample.c
