@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "features": {
+    "open": {"class":"native","area":"files","note":"Prefer libc/AmigaDOS-backed implementation."},
+    "close": {"class":"native","area":"files"},
+    "read": {"class":"native","area":"files"},
+    "write": {"class":"native","area":"files"},
+    "stat": {"class":"native","area":"files"},
+    "opendir": {"class":"native","area":"directories"},
+    "readdir": {"class":"native","area":"directories"},
+    "getenv": {"class":"native","area":"environment"},
+    "socket": {"class":"native","area":"network","note":"Map through the native Amiga networking interface."},
+    "connect": {"class":"native","area":"network"},
+    "select": {"class":"native","area":"network"},
+    "getaddrinfo": {"class":"library","area":"network"},
+    "getline": {"class":"library","area":"libc"},
+    "getopt_long": {"class":"library","area":"libc"},
+    "clock_gettime": {"class":"library","area":"time"},
+    "pthread_create": {"class":"investigate","area":"threads","note":"Requires an explicit, documented Amiga execution-model mapping."},
+    "fork": {"class":"adapt","area":"process","note":"Unix fork semantics are not to be emulated deceptively; prefer spawn-style adaptation."},
+    "execvp": {"class":"adapt","area":"process"},
+    "mmap": {"class":"adapt","area":"memory"},
+    "epoll_create": {"class":"unsupported","area":"events"},
+    "epoll_wait": {"class":"unsupported","area":"events"},
+    "inotify_init": {"class":"unsupported","area":"filesystem-events"}
+  }
+}
