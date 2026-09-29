@@ -15,9 +15,11 @@ build/lib_stdio.o: lib/stdio.c include/amposix/stdio.h | build
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ lib/stdio.c
 build/lib_string.o: lib/string.c include/amposix/string.h | build
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ lib/string.c
-build/lib_env.o: lib/env_host.c include/amposix/env.h | build
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ lib/env_host.c
-build/libamposix.a: build/lib_features.o build/lib_stdio.o build/lib_string.o build/lib_env.o
+build/lib_env.o: lib/env.c include/amposix/env.h lib/platform.h | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Ilib -c -o $@ lib/env.c
+build/platform_host.o: platform/host/platform.c lib/platform.h | build
+	$(CC) $(CPPFLAGS) $(CFLAGS) -Ilib -c -o $@ platform/host/platform.c
+build/libamposix.a: build/lib_features.o build/lib_stdio.o build/lib_string.o build/lib_env.o build/platform_host.o
 	$(AR) rcs $@ $^
 build/test_scan: tests/test_scan.c | build
 	$(CC) $(CFLAGS) -o $@ tests/test_scan.c
