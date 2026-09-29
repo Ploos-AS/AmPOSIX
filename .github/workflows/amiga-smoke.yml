@@ -4,17 +4,24 @@ on:
   workflow_call:
 permissions:
   contents: read
+  packages: read
 jobs:
-  m68k-library:
+  m68k-build:
+    uses: Ploos-AS/amiga-dev/.github/workflows/reusable-amiga-dev.yml@a786bb71dbd9559e6a50817c548ea3f74f4828e1
+    with:
+      image: ghcr.io/ploos-as/amiga-dev:sha-a786bb7
+      command: make amiga-probes amiga-payload
+  publish-q1:
+    needs: m68k-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Locate m68k toolchain
+      - name: Build Q1 payload in pinned amiga-dev
         run: |
-          command -v m68k-amigaos-gcc
-          command -v m68k-amigaos-ar
-      - name: Cross-build libamposix
-        run: make amiga-probes amiga-payload
+          docker pull ghcr.io/ploos-as/amiga-dev:sha-a786bb7
+          docker run --rm -v "$PWD:/workspace" -w /workspace \
+            ghcr.io/ploos-as/amiga-dev:sha-a786bb7 \
+            sh -ec 'make amiga-probes amiga-payload'
       - name: Validate runtime payload
         run: |
           test -x build/amiga/payload/amposix-qualification
