@@ -14,4 +14,4 @@ jobs:
           command -v m68k-amigaos-gcc
           command -v m68k-amigaos-ar
       - name: Cross-build libamposix
-        run: make amiga-smoke
+        run: make amiga-qualification
