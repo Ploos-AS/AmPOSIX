@@ -3,7 +3,7 @@ AR ?= ar
 CFLAGS ?= -O2 -Wall -Wextra -pedantic
 CPPFLAGS ?= -Isrc -Iinclude
 
-.PHONY: all test clean validate amiga-smoke
+.PHONY: all test clean validate amiga-smoke amiga-qualification
 all: build/amposix build/libamposix.a
 build:
 	mkdir -p build
@@ -72,4 +72,7 @@ build/amiga/platform.o: platform/amigaos/platform.c lib/platform.h | build/amiga
 	$(AMIGA_CC) $(AMIGA_CPPFLAGS) $(AMIGA_CFLAGS) -c -o $@ platform/amigaos/platform.c
 build/amiga/libamposix.a: $(AMIGA_OBJECTS)
 	$(AMIGA_AR) rcs $@ $^
+build/amiga/amposix-qualification: qualification/amiga.c build/amiga/libamposix.a
+	$(AMIGA_CC) $(AMIGA_CPPFLAGS) $(AMIGA_CFLAGS) -o $@ qualification/amiga.c build/amiga/libamposix.a
 amiga-smoke: build/amiga/libamposix.a
+amiga-qualification: build/amiga/amposix-qualification
