@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "features.h"
+#include "feature_db.h"
 #include "headers.h"
 static int valid_class(const char*s){static const char*classes[]={"native","header","library","adapt","unsupported","investigate"};size_t i;for(i=0;i<sizeof(classes)/sizeof(classes[0]);i++)if(!strcmp(s,classes[i]))return 1;return 0;}
 int main(void){size_t i,j;int errors=0;
