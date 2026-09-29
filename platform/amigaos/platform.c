@@ -1,5 +1,6 @@
 /* AmigaOS platform backend. */
-#include <errno.h>\n#include <string.h>
+#include <errno.h>
+#include <string.h>
 #include <exec/io.h>
 #include <devices/timer.h>
 #include <proto/exec.h>
