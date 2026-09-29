@@ -14,4 +14,15 @@ jobs:
           command -v m68k-amigaos-gcc
           command -v m68k-amigaos-ar
       - name: Cross-build libamposix
-        run: make amiga-qualification
+        run: make amiga-payload
+      - name: Validate runtime payload
+        run: |
+          test -x build/amiga/payload/amposix-qualification
+          jq -e '.schema == 1 and .project == "AmPOSIX" and .architecture == "m68k"' build/amiga/payload/amiga-runtime.json >/dev/null
+          test "$(find build/amiga/payload -type f | wc -l)" -eq 2
+      - name: Upload Q1 payload
+        uses: actions/upload-artifact@v4
+        with:
+          name: amposix-amiga-q1
+          path: build/amiga/payload/
+          if-no-files-found: error
