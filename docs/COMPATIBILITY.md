@@ -20,7 +20,8 @@ This table is a design target for investigation, not a statement of completed su
 | File I/O | `open`, `read`, `write`, `close` | investigate | Prefer existing libc/DOS mapping |
 | Metadata | `stat` | investigate | Prefer libc/DOS mapping |
 | Directories | `opendir`, `readdir`, `closedir` | investigate | Prefer existing libc or thin wrapper |
-| Environment | `getenv` | investigate | Map to available C/AmigaOS facilities |
+| Environment | `getenv` | native | Use the C environment where available |
+| Environment mutation | `setenv`, `unsetenv` | library | Host backend implemented; AmigaDOS mapping remains platform-specific |
 | Options | `getopt`, `getopt_long` | investigate | Header/library compatibility if needed |
 | Line input | `getline`, `getdelim` | library | Implemented as `amposix_getline` / `amposix_getdelim`; optional POSIX-name macros |
 | Strings | `strdup`, `strndup` | library | Implemented with optional POSIX-name macros |
@@ -56,3 +57,9 @@ By default AmPOSIX does not replace host libc symbols. A port may define `AMPOSI
 ### String compatibility
 
 `<amposix/string.h>` provides `amposix_strdup()`, `amposix_strndup()`, `amposix_strlcpy()` and `amposix_strlcat()`. POSIX names are opt-in through `AMPOSIX_ENABLE_POSIX_NAMES`; BSD extension names are separately opt-in through `AMPOSIX_ENABLE_BSD_NAMES`. This distinction is intentional: AmPOSIX does not describe `strlcpy` or `strlcat` as POSIX interfaces.
+
+### Environment compatibility
+
+`<amposix/env.h>` provides `amposix_setenv()` and `amposix_unsetenv()`. The current host backend implements POSIX-style process-environment behaviour and validates variable names. POSIX names remain opt-in through `AMPOSIX_ENABLE_POSIX_NAMES`.
+
+AmigaOS qualification must not assume that the C process environment, AmigaDOS local variables and AmigaDOS global variables are interchangeable. The future Amiga backend will document which namespace is used for POSIX compatibility, while native local/global-variable access should remain available through an explicit Amiga-oriented API where useful.
