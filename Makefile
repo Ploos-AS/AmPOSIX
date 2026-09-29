@@ -3,7 +3,7 @@ AR ?= ar
 CFLAGS ?= -O2 -Wall -Wextra -pedantic
 CPPFLAGS ?= -Isrc -Iinclude
 
-.PHONY: all test clean validate
+.PHONY: all test clean validate amiga-smoke
 all: build/amposix build/libamposix.a
 build:
 	mkdir -p build
@@ -49,3 +49,27 @@ test: build/amposix build/test_scan build/test_database build/test_lib_features 
 	./build/test_lib_time
 clean:
 	rm -rf build
+
+AMIGA_CC ?= m68k-amigaos-gcc
+AMIGA_AR ?= m68k-amigaos-ar
+AMIGA_CFLAGS ?= -O2 -Wall -Wextra -pedantic
+AMIGA_CPPFLAGS ?= -Iinclude -Ilib -Isrc
+AMIGA_OBJECTS = build/amiga/lib_features.o build/amiga/lib_stdio.o build/amiga/lib_string.o build/amiga/lib_env.o build/amiga/lib_time.o build/amiga/platform.o
+
+build/amiga:
+	mkdir -p build/amiga
+build/amiga/lib_features.o: lib/features.c include/amposix/features.h src/features.h | build/amiga
+	$(AMIGA_CC) $(AMIGA_CPPFLAGS) $(AMIGA_CFLAGS) -c -o $@ lib/features.c
+build/amiga/lib_stdio.o: lib/stdio.c include/amposix/stdio.h | build/amiga
+	$(AMIGA_CC) $(AMIGA_CPPFLAGS) $(AMIGA_CFLAGS) -c -o $@ lib/stdio.c
+build/amiga/lib_string.o: lib/string.c include/amposix/string.h | build/amiga
+	$(AMIGA_CC) $(AMIGA_CPPFLAGS) $(AMIGA_CFLAGS) -c -o $@ lib/string.c
+build/amiga/lib_env.o: lib/env.c include/amposix/env.h lib/platform.h | build/amiga
+	$(AMIGA_CC) $(AMIGA_CPPFLAGS) $(AMIGA_CFLAGS) -c -o $@ lib/env.c
+build/amiga/lib_time.o: lib/time.c include/amposix/time.h lib/platform.h | build/amiga
+	$(AMIGA_CC) $(AMIGA_CPPFLAGS) $(AMIGA_CFLAGS) -c -o $@ lib/time.c
+build/amiga/platform.o: platform/amigaos/platform.c lib/platform.h | build/amiga
+	$(AMIGA_CC) $(AMIGA_CPPFLAGS) $(AMIGA_CFLAGS) -c -o $@ platform/amigaos/platform.c
+build/amiga/libamposix.a: $(AMIGA_OBJECTS)
+	$(AMIGA_AR) rcs $@ $^
+amiga-smoke: build/amiga/libamposix.a
