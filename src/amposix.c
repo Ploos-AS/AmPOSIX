@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include "features.h"
+#include "feature_db.h"
 #include "headers.h"
 #include "output.h"
 
