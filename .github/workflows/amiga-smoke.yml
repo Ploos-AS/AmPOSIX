@@ -14,7 +14,7 @@ jobs:
           command -v m68k-amigaos-gcc
           command -v m68k-amigaos-ar
       - name: Cross-build libamposix
-        run: make amiga-payload
+        run: make amiga-probes amiga-payload
       - name: Validate runtime payload
         run: |
           test -x build/amiga/payload/amposix-qualification
