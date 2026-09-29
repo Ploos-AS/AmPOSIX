@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  m0:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate M0 repository contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s README.md
+          test -s LICENSE
+          test -s CONTRIBUTING.md
+          test -s docs/ROADMAP.md
+          test -s docs/COMPATIBILITY.md
+          test -s include/amposix/README.md
+          test -s ports/README.md
+          grep -q "native-first" README.md
+          grep -q "Level 0" README.md
+          grep -q "fork" docs/COMPATIBILITY.md
+
+      - name: Reject obvious proprietary payloads
+        shell: bash
+        run: |
+          set -euo pipefail
+          if find . -type f \( -iname '*.rom' -o -iname '*.adf' -o -iname '*.hdf' \) -print -quit | grep -q .; then
+            echo "ROM/disk image payload detected. Keep proprietary runtime assets out of AmPOSIX."
+            exit 1
+          fi
