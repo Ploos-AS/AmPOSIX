@@ -29,7 +29,7 @@ jobs:
         run: |
           test -x build/amiga/payload/amposix-qualification
           jq -e '.schema == 1 and .project == "AmPOSIX" and .architecture == "m68k"' build/amiga/payload/amiga-runtime.json >/dev/null
-          test "$(find build/amiga/payload -type f | wc -l)" -eq 2
+          test "$(find build/amiga/payload -type f | wc -l)" -eq 3
       - name: Upload Q1 payload
         uses: actions/upload-artifact@v4
         with:
