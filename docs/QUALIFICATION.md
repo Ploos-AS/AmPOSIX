@@ -5,10 +5,18 @@
 Build it with:
 
 ```sh
-make amiga-qualification
+make amiga-payload
 ```
 
-The resulting `build/amiga/amposix-qualification` must be copied into the runtime test volume and executed under the supported AmigaOS profiles.
+The resulting `build/amiga/payload/` is the complete Q1 handoff artifact:
+
+```text
+payload/
+├── amiga-runtime.json
+└── amposix-qualification
+```
+
+The payload is intentionally self-contained except for the emulator/OS assets supplied by `amiga-runtime`. CI publishes it as the `amposix-amiga-q1` artifact. The contract selects the classic `a500-os204`, `a500plus-os2`, and `a1200-020-os3` runtime profiles.
 
 Output is intentionally machine-readable line text:
 
