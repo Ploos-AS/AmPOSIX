@@ -1,4 +1,4 @@
-/* AmPOSIX portability scanner -- C-first, with host traversal isolated here. */
+/* AmPOSIX portability scanner -- C-first, conservative lexical analysis. */
 #include <ctype.h>
 #include <dirent.h>
 #include <stdio.h>
@@ -6,68 +6,51 @@
 #include <string.h>
 #include <sys/stat.h>
 #include "features.h"
+#include "headers.h"
 
-static int total_findings;
-static int total_files;
+static int total_findings, total_files;
+static int ident(int c){return isalnum((unsigned char)c)||c=='_';}
+static int source_name(const char *p){const char *d=strrchr(p,'.');return d&&(!strcmp(d,".c")||!strcmp(d,".h")||!strcmp(d,".cc")||!strcmp(d,".cpp")||!strcmp(d,".cxx")||!strcmp(d,".hpp"));}
 
-static int ident(int c){ return isalnum((unsigned char)c) || c=='_'; }
-static int source_name(const char *p){
- const char *d=strrchr(p,'.');
- return d && (!strcmp(d,".c")||!strcmp(d,".h")||!strcmp(d,".cc")||!strcmp(d,".cpp")||!strcmp(d,".cxx")||!strcmp(d,".hpp"));
-}
-static int call_at(const char *line,const char *name){
- size_t n=strlen(name); const char *p=line;
- while((p=strstr(p,name))!=NULL){
-  const char *q=p+n;
-  if((p==line || !ident((unsigned char)p[-1])) && !ident((unsigned char)*q)){
-   while(*q && isspace((unsigned char)*q)) q++;
-   if(*q=='(') return 1;
+/* Strip comments and quoted literals while preserving character positions/newlines. */
+static void sanitize(char *s){
+ int block=0,line=0,str=0,chr=0,esc=0; size_t i;
+ for(i=0;s[i];i++){
+  char c=s[i],n=s[i+1];
+  if(line){if(c=='\n') line=0; else s[i]=' '; continue;}
+  if(block){if(c=='*'&&n=='/'){s[i]=s[i+1]=' ';i++;block=0;}else if(c!='\n')s[i]=' ';continue;}
+  if(str||chr){
+   if(c=='\n'){str=chr=esc=0;continue;}
+   if(esc){s[i]=' ';esc=0;continue;}
+   if(c=='\\'){s[i]=' ';esc=1;continue;}
+   if((str&&c=='"')||(chr&&c=='\'')){s[i]=' ';str=chr=0;}else s[i]=' ';
+   continue;
   }
-  p+=n;
+  if(c=='/'&&n=='/'){s[i]=s[i+1]=' ';i++;line=1;continue;}
+  if(c=='/'&&n=='*'){s[i]=s[i+1]=' ';i++;block=1;continue;}
+  if(c=='"'){s[i]=' ';str=1;continue;} if(c=='\''){s[i]=' ';chr=1;continue;}
  }
- return 0;
+}
+static unsigned long line_of(const char *base,const char *p){unsigned long n=1;while(base<p){if(*base++=='\n')n++;}return n;}
+static int call_at(const char *base,const char *name,const char **hit){
+ size_t n=strlen(name);const char *p=base;
+ while((p=strstr(p,name))!=NULL){const char *q=p+n;if((p==base||!ident((unsigned char)p[-1]))&&!ident((unsigned char)*q)){while(*q&&isspace((unsigned char)*q))q++;if(*q=='('){*hit=p;return 1;}}p+=n;}return 0;
+}
+static char *read_all(const char *path){FILE *f=fopen(path,"rb");long n;char *b;if(!f)return NULL;if(fseek(f,0,SEEK_END)){fclose(f);return NULL;}n=ftell(f);if(n<0){fclose(f);return NULL;}rewind(f);b=(char*)malloc((size_t)n+1);if(!b){fclose(f);return NULL;}if(fread(b,1,(size_t)n,f)!=(size_t)n){free(b);fclose(f);return NULL;}b[n]=0;fclose(f);return b;}
+static void scan_includes(const char *path,const char *original){
+ const char *p=original; unsigned long ln=1;
+ while(*p){const char *e=strchr(p,'\n');size_t len=e?(size_t)(e-p):strlen(p);const char *q=p;size_t i;
+  while(q<p+len&&isspace((unsigned char)*q))q++;
+  if(q<p+len&&*q=='#'){q++;while(q<p+len&&isspace((unsigned char)*q))q++;if((size_t)(p+len-q)>=7&&!strncmp(q,"include",7)){q+=7;while(q<p+len&&isspace((unsigned char)*q))q++;if(q<p+len&&(*q=='<'||*q=='"')){char end=*q=='<'?'>':'"';char name[256];size_t k=0;q++;while(q<p+len&&*q!=end&&k+1<sizeof(name))name[k++]=*q++;name[k]=0;for(i=0;i<AMPOSIX_HEADER_COUNT;i++)if(!strcmp(name,amposix_headers[i].name)){printf("%s:%lu: %-13s include:%-10s [header]",path,ln,amposix_headers[i].class_name,name);if(amposix_headers[i].note[0])printf(" - %s",amposix_headers[i].note);putchar('\n');total_findings++;}}}}
+  if(!e)break;p=e+1;ln++;
+ }
 }
 static int scan_file(const char *path){
- FILE *f=fopen(path,"r"); char line[8192]; unsigned long lineno=0; size_t i;
- if(!f){fprintf(stderr,"amposix: cannot read %s\n",path);return 1;}
- total_files++;
- while(fgets(line,sizeof(line),f)){
-  lineno++;
-  for(i=0;i<AMPOSIX_FEATURE_COUNT;i++) if(call_at(line,amposix_features[i].name)){
-   const struct amposix_feature *x=&amposix_features[i];
-   printf("%s:%lu: %-13s %-18s [%s]",path,lineno,x->class_name,x->name,x->area);
-   if(x->note[0]) printf(" - %s",x->note);
-   putchar('\n'); total_findings++;
-  }
- }
- fclose(f); return 0;
+ char *orig=read_all(path),*clean;size_t i;if(!orig){fprintf(stderr,"amposix: cannot read %s\n",path);return 1;}total_files++;scan_includes(path,orig);
+ clean=(char*)malloc(strlen(orig)+1);if(!clean){free(orig);return 1;}strcpy(clean,orig);sanitize(clean);
+ for(i=0;i<AMPOSIX_FEATURE_COUNT;i++){const char *p=clean,*hit;while(call_at(p,amposix_features[i].name,&hit)){const struct amposix_feature*x=&amposix_features[i];printf("%s:%lu: %-13s %-18s [%s]",path,line_of(clean,hit),x->class_name,x->name,x->area);if(x->note[0])printf(" - %s",x->note);putchar('\n');total_findings++;p=hit+strlen(x->name);}}
+ free(clean);free(orig);return 0;
 }
-static int join_path(char *out,size_t cap,const char *a,const char *b){
- int n=snprintf(out,cap,"%s/%s",a,b); return n<0 || (size_t)n>=cap;
-}
-static int scan_path(const char *path){
- struct stat st;
- if(stat(path,&st)!=0){fprintf(stderr,"amposix: cannot stat %s\n",path);return 1;}
- if(S_ISREG(st.st_mode)) return source_name(path)?scan_file(path):0;
- if(S_ISDIR(st.st_mode)){
-  DIR *d=opendir(path); struct dirent *e; int rc=0;
-  if(!d){fprintf(stderr,"amposix: cannot open directory %s\n",path);return 1;}
-  while((e=readdir(d))!=NULL){
-   char child[4096];
-   if(!strcmp(e->d_name,".")||!strcmp(e->d_name,"..")||!strcmp(e->d_name,".git")||!strcmp(e->d_name,"build")) continue;
-   if(join_path(child,sizeof(child),path,e->d_name)){fprintf(stderr,"amposix: path too long under %s\n",path);rc=1;continue;}
-   if(scan_path(child)!=0) rc=1;
-  }
-  closedir(d); return rc;
- }
- return 0;
-}
-static void usage(void){fprintf(stderr,"usage: amposix scan <source-file-or-directory>\n");}
-int main(int argc,char **argv){
- int rc;
- if(argc!=3 || strcmp(argv[1],"scan")!=0){usage();return 2;}
- puts("AmPOSIX portability report\n==========================");
- rc=scan_path(argv[2]);
- printf("\nFiles scanned: %d\nFindings: %d\n",total_files,total_findings);
- return rc;
-}
+static int join_path(char*out,size_t cap,const char*a,const char*b){int n=snprintf(out,cap,"%s/%s",a,b);return n<0||(size_t)n>=cap;}
+static int scan_path(const char*path){struct stat st;if(stat(path,&st)!=0){fprintf(stderr,"amposix: cannot stat %s\n",path);return 1;}if(S_ISREG(st.st_mode))return source_name(path)?scan_file(path):0;if(S_ISDIR(st.st_mode)){DIR*d=opendir(path);struct dirent*e;int rc=0;if(!d)return 1;while((e=readdir(d))!=NULL){char child[4096];if(!strcmp(e->d_name,".")||!strcmp(e->d_name,"..")||!strcmp(e->d_name,".git")||!strcmp(e->d_name,"build"))continue;if(join_path(child,sizeof(child),path,e->d_name)){rc=1;continue;}if(scan_path(child))rc=1;}closedir(d);return rc;}return 0;}
+int main(int argc,char**argv){int rc;if(argc!=3||strcmp(argv[1],"scan")){fprintf(stderr,"usage: amposix scan <source-file-or-directory>\n");return 2;}puts("AmPOSIX portability report\n==========================");rc=scan_path(argv[2]);printf("\nFiles scanned: %d\nFindings: %d\n",total_files,total_findings);return rc;}
