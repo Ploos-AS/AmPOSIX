@@ -21,7 +21,8 @@ jobs:
       - name: Build Q1 payload in pinned amiga-dev
         run: |
           docker pull ghcr.io/ploos-as/amiga-dev:sha-03a98b2
-          docker run --rm -v "$PWD:/workspace" -w /workspace \
+          docker run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+            -v "$PWD:/workspace" -w /workspace \
             ghcr.io/ploos-as/amiga-dev:sha-03a98b2 \
             sh -ec 'make amiga-probes amiga-payload'
       - name: Validate runtime payload
