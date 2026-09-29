@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "project": "AmPOSIX",
+  "milestone": "M1",
+  "architecture": "m68k",
+  "payload": {
+    "kind": "program",
+    "program": "amposix-qualification"
+  },
+  "emulator_profiles": [
+    "a500-os204",
+    "a500plus-os2",
+    "a1200-020-os3"
+  ],
+  "result": {
+    "log": "amposix-qualification.log",
+    "required_lines": [
+      "AmPOSIX qualification 0.1.0",
+      "SUMMARY "
+    ]
+  },
+  "policy": {
+    "roms_in_repository": false,
+    "amigaos_files_in_repository": false
+  }
+}
