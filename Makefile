@@ -3,7 +3,7 @@ AR ?= ar
 CFLAGS ?= -O2 -Wall -Wextra -pedantic
 CPPFLAGS ?= -Isrc -Iinclude
 
-.PHONY: all test clean validate amiga-smoke amiga-qualification amiga-payload
+.PHONY: all test clean validate amiga-smoke amiga-qualification amiga-payload amiga-probes
 all: build/amposix build/libamposix.a
 build:
 	mkdir -p build
@@ -81,3 +81,12 @@ build/amiga/payload: build/amiga/amposix-qualification qualification/amiga-runti
 	cp build/amiga/amposix-qualification $@/
 	cp qualification/amiga-runtime.json $@/
 amiga-payload: build/amiga/payload
+
+AMIGA_PROBES = build/amiga/probe-read-eclock.o build/amiga/probe-timer-device.o build/amiga/probe-datestamp.o
+build/amiga/probe-read-eclock.o: qualification/probes/read-eclock.c | build/amiga
+	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
+build/amiga/probe-timer-device.o: qualification/probes/timer-device.c | build/amiga
+	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
+build/amiga/probe-datestamp.o: qualification/probes/datestamp.c | build/amiga
+	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
+amiga-probes: $(AMIGA_PROBES)
