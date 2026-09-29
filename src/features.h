@@ -8,7 +8,7 @@ static const struct amposix_feature amposix_features[] = {
  {"stat","native","files",""}, {"opendir","native","directories",""}, {"readdir","native","directories",""},
  {"getenv","native","environment",""}, {"socket","native","network","Map through the native Amiga networking interface."},
  {"connect","native","network",""}, {"select","native","network",""}, {"getaddrinfo","library","network",""},
- {"getline","library","libc",""}, {"getopt_long","library","libc",""}, {"clock_gettime","library","time",""},
+ {"getline","library","libc","Implemented by libamposix as amposix_getline."}, {"getdelim","library","libc","Implemented by libamposix as amposix_getdelim."}, {"getopt_long","library","libc",""}, {"clock_gettime","library","time",""},
  {"pthread_create","investigate","threads","Requires an explicit, documented Amiga execution-model mapping."},
  {"fork","adapt","process","Prefer spawn-style adaptation; do not fake Unix fork semantics."},
  {"execvp","adapt","process",""}, {"mmap","adapt","memory",""},
