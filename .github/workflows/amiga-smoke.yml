@@ -9,9 +9,9 @@ permissions:
   packages: read
 jobs:
   m68k-build:
-    uses: Ploos-AS/amiga-dev/.github/workflows/reusable-amiga-dev.yml@a786bb71dbd9559e6a50817c548ea3f74f4828e1
+    uses: Ploos-AS/amiga-dev/.github/workflows/reusable-amiga-dev.yml@03a98b263bb8dc7a57fb544608b26f4066facfc6
     with:
-      image: ghcr.io/ploos-as/amiga-dev:sha-a786bb7
+      image: ghcr.io/ploos-as/amiga-dev:sha-03a98b2
       command: make amiga-probes amiga-payload
   publish-q1:
     needs: m68k-build
@@ -20,9 +20,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build Q1 payload in pinned amiga-dev
         run: |
-          docker pull ghcr.io/ploos-as/amiga-dev:sha-a786bb7
+          docker pull ghcr.io/ploos-as/amiga-dev:sha-03a98b2
           docker run --rm -v "$PWD:/workspace" -w /workspace \
-            ghcr.io/ploos-as/amiga-dev:sha-a786bb7 \
+            ghcr.io/ploos-as/amiga-dev:sha-03a98b2 \
             sh -ec 'make amiga-probes amiga-payload'
       - name: Validate runtime payload
         run: |
