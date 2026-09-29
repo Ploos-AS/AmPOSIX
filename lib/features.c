@@ -1,7 +1,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <amposix/features.h>
-#include "features.h"
+#include "feature_db.h"
 static enum amposix_support support_from_name(const char*s){
  if(!strcmp(s,"native"))return AMPOSIX_SUPPORT_NATIVE;if(!strcmp(s,"header"))return AMPOSIX_SUPPORT_HEADER;
  if(!strcmp(s,"library"))return AMPOSIX_SUPPORT_LIBRARY;if(!strcmp(s,"adapt"))return AMPOSIX_SUPPORT_ADAPT;
