@@ -5,7 +5,8 @@
   "architecture": "m68k",
   "payload": {
     "kind": "program",
-    "program": "amposix-qualification"
+    "program": "amposix-qualification",
+    "script": "run-amiga-qualification"
   },
   "emulator_profiles": [
     "a500-os204",
@@ -16,7 +17,10 @@
     "log": "amposix-qualification.log",
     "required_lines": [
       "AmPOSIX qualification 0.1.0",
-      "SUMMARY "
+      "PASS strdup",
+      "PASS strlcpy",
+      "PASS monotonic",
+      "AMPOSIX-RC-PASS"
     ]
   },
   "policy": {
