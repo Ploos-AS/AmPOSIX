@@ -2,8 +2,7 @@
 #ifndef AMPOSIX_FEATURE_DB_H
 #define AMPOSIX_FEATURE_DB_H
 #include <amposix/features.h>
-struct amposix_feature { const char *name; enum amposix_support support; const char *area; const char *note; };
-static const struct amposix_feature amposix_features[] = {
+static const struct amposix_capability amposix_features[] = {
  {"open",AMPOSIX_SUPPORT_NATIVE,"files","Prefer libc/AmigaDOS-backed implementation."},
  {"close",AMPOSIX_SUPPORT_NATIVE,"files",""}, {"read",AMPOSIX_SUPPORT_NATIVE,"files",""}, {"write",AMPOSIX_SUPPORT_NATIVE,"files",""},
  {"stat",AMPOSIX_SUPPORT_NATIVE,"files",""}, {"opendir",AMPOSIX_SUPPORT_NATIVE,"directories",""}, {"readdir",AMPOSIX_SUPPORT_NATIVE,"directories",""},
