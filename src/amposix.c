@@ -45,13 +45,13 @@ static void scan_includes(const char *path,const char *original){
  while(*p){const char *e=strchr(p,'\n');size_t len=e?(size_t)(e-p):strlen(p);const char *q=p;size_t i;
   while(q<p+len&&isspace((unsigned char)*q))q++;
   if(q<p+len&&*q=='#'){q++;while(q<p+len&&isspace((unsigned char)*q))q++;if((size_t)(p+len-q)>=7&&!strncmp(q,"include",7)){q+=7;while(q<p+len&&isspace((unsigned char)*q))q++;if(q<p+len&&(*q=='<'||*q=='"')){char end=*q=='<'?'>':'"';char name[256];size_t k=0;q++;while(q<p+len&&*q!=end&&k+1<sizeof(name))name[k++]=*q++;name[k]=0;for(i=0;i<AMPOSIX_HEADER_COUNT;i++)if(!strcmp(name,amposix_headers[i].name)){{struct amposix_finding f={path,ln,"include",name,amposix_headers[i].class_name,"header",amposix_headers[i].note};amposix_output_finding(output_format,&f);total_findings++;}}}}}
-  if(!e)break;p=e+1;ln++;
+  if(!e)break;\n  p=e+1;\n  ln++;
  }
 }
 static int scan_file(const char *path){
  char *orig=read_all(path),*clean;size_t i;if(!orig){fprintf(stderr,"amposix: cannot read %s\n",path);return 1;}total_files++;scan_includes(path,orig);
  clean=(char*)malloc(strlen(orig)+1);if(!clean){free(orig);return 1;}strcpy(clean,orig);sanitize(clean);
- for(i=0;i<AMPOSIX_FEATURE_COUNT;i++){const char *p=clean,*hit;while(call_at(p,amposix_features[i].name,&hit)){const struct amposix_feature*x=&amposix_features[i];{struct amposix_finding f={path,line_of(clean,hit),"call",x->name,x->class_name,x->area,x->note};amposix_output_finding(output_format,&f);total_findings++;}p=hit+strlen(x->name);}}
+ for(i=0;i<AMPOSIX_FEATURE_COUNT;i++){const char *p=clean,*hit;while(call_at(p,amposix_features[i].name,&hit)){const struct amposix_feature*x=&amposix_features[i];{struct amposix_finding f={path,line_of(clean,hit),"call",x->name,amposix_support_name(x->support),x->area,x->note};amposix_output_finding(output_format,&f);total_findings++;}p=hit+strlen(x->name);}}
  free(clean);free(orig);return 0;
 }
 static int join_path(char*out,size_t cap,const char*a,const char*b){int n=snprintf(out,cap,"%s/%s",a,b);return n<0||(size_t)n>=cap;}
