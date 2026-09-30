@@ -17,4 +17,4 @@ int main(void){char *p=0;size_t cap=0;FILE*f;struct amposix_timespec ts;
  f=tmpfile();if(f){fputs("line\n",f);rewind(f);result("getline",amposix_getline(&p,&cap,f)==5&&strcmp(p,"line\n")==0);free(p);p=0;fclose(f);}else skipped("getline","tmpfile unavailable");
  errno=0;if(amposix_setenv("AMPOSIX_QUALIFY","1",1)==0){result("environment",getenv("AMPOSIX_QUALIFY")!=0);amposix_unsetenv("AMPOSIX_QUALIFY");}else if(errno==ENOSYS)skipped("environment","platform backend unqualified");else result("environment",0);
  errno=0;if(amposix_clock_gettime(AMPOSIX_CLOCK_MONOTONIC,&ts)==0)result("monotonic",ts.tv_nsec>=0&&ts.tv_nsec<1000000000L);else if(errno==ENOSYS)skipped("monotonic","platform backend unqualified");else result("monotonic",0);
- printf("SUMMARY pass=%d fail=%d skip=%d\n",pass,fail,skip);return fail?1:0;}
+ printf("SUMMARY pass=%d fail=%d skip=%d\n",pass,fail,skip);return fail?20:0;}
