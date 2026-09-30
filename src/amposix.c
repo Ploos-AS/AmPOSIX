@@ -53,7 +53,7 @@ static void scan_includes(const char *path,const char *original){
 static int scan_file(const char *path){
  char *orig=read_all(path),*clean;size_t i;if(!orig){fprintf(stderr,"amposix: cannot read %s\n",path);return 1;}total_files++;scan_includes(path,orig);
  clean=(char*)malloc(strlen(orig)+1);if(!clean){free(orig);return 1;}strcpy(clean,orig);sanitize(clean);
- for(i=0;i<AMPOSIX_FEATURE_COUNT;i++){const char *p=clean,*hit;while(call_at(p,amposix_features[i].name,&hit)){const struct amposix_feature*x=&amposix_features[i];{struct amposix_finding f={path,line_of(clean,hit),"call",x->name,amposix_feature_support_name(x->support),x->area,x->note};amposix_output_finding(output_format,&f);total_findings++;}p=hit+strlen(x->name);}}
+ for(i=0;i<AMPOSIX_FEATURE_COUNT;i++){const char *p=clean,*hit;while(call_at(p,amposix_features[i].name,&hit)){const struct amposix_capability*x=&amposix_features[i];{struct amposix_finding f={path,line_of(clean,hit),"call",x->name,amposix_feature_support_name(x->support),x->area,x->note};amposix_output_finding(output_format,&f);total_findings++;}p=hit+strlen(x->name);}}
  free(clean);free(orig);return 0;
 }
 static int join_path(char*out,size_t cap,const char*a,const char*b){int n=snprintf(out,cap,"%s/%s",a,b);return n<0||(size_t)n>=cap;}
