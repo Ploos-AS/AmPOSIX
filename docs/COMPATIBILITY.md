@@ -63,3 +63,14 @@ By default AmPOSIX does not replace host libc symbols. A port may define `AMPOSI
 `<amposix/env.h>` provides `amposix_setenv()` and `amposix_unsetenv()`. The current host backend implements POSIX-style process-environment behaviour and validates variable names. POSIX names remain opt-in through `AMPOSIX_ENABLE_POSIX_NAMES`.
 
 AmigaOS qualification must not assume that the C process environment, AmigaDOS local variables and AmigaDOS global variables are interchangeable. The future Amiga backend will document which namespace is used for POSIX compatibility, while native local/global-variable access should remain available through an explicit Amiga-oriented API where useful.
+
+
+### Time compatibility
+
+`<amposix/time.h>` provides AmPOSIX clock and sleep interfaces. The host backend implements realtime, monotonic time and nanosleep. The classic AmigaOS backend uses the E-Clock for monotonic time, `timer.device` for sleeping, and `TR_GETSYSTIME` for the system wall clock.
+
+Classic AmigaOS system time counts seconds and microseconds from 1978-01-01. AmPOSIX adds 252460800 seconds when exposing `AMPOSIX_CLOCK_REALTIME`, so the numeric epoch matches Unix/POSIX 1970-01-01. This is an epoch conversion only: AmPOSIX does not silently apply a timezone correction to the Amiga system clock.
+
+On classic m68k builds `struct amposix_timespec.tv_sec` is currently a signed `long`. Consequently the Unix-epoch representation has a signed 32-bit 2038 limit even though the underlying classic AmigaOS timer value is unsigned. This limitation is explicit and must be resolved before AmPOSIX claims post-2038 realtime support.
+
+Cross-compilation proves API and link compatibility only. Classic AmigaOS runtime support remains unqualified until the Q4 emulator contract records the required guest PASS evidence.
