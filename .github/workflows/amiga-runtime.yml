@@ -9,22 +9,25 @@ jobs:
     uses: ./.github/workflows/amiga-smoke.yml
   qualify-a500:
     needs: build-q1
-    uses: Ploos-AS/amiga-runtime/.github/workflows/reusable-project-qualify.yml@c2003ff3bcbee263991203854da328377ae3a51b
+    uses: Ploos-AS/amiga-runtime/.github/workflows/reusable-project-qualify.yml@4f6593713bc15087e79e4e67dc4f2ea2d6df007a
     with:
       payload_artifact: amposix-amiga-q1
       profile: a500-os204
-      runtime_image: ghcr.io/ploos-as/amiga-runtime:sha-c2003ff
+      runtime_image: ghcr.io/ploos-as/amiga-runtime:sha-4f65937
+      runner: self-hosted
   qualify-a500plus:
     needs: build-q1
-    uses: Ploos-AS/amiga-runtime/.github/workflows/reusable-project-qualify.yml@c2003ff3bcbee263991203854da328377ae3a51b
+    uses: Ploos-AS/amiga-runtime/.github/workflows/reusable-project-qualify.yml@4f6593713bc15087e79e4e67dc4f2ea2d6df007a
     with:
       payload_artifact: amposix-amiga-q1
       profile: a500plus-os2
-      runtime_image: ghcr.io/ploos-as/amiga-runtime:sha-c2003ff
+      runtime_image: ghcr.io/ploos-as/amiga-runtime:sha-4f65937
+      runner: self-hosted
   qualify-a1200:
     needs: build-q1
-    uses: Ploos-AS/amiga-runtime/.github/workflows/reusable-project-qualify.yml@c2003ff3bcbee263991203854da328377ae3a51b
+    uses: Ploos-AS/amiga-runtime/.github/workflows/reusable-project-qualify.yml@4f6593713bc15087e79e4e67dc4f2ea2d6df007a
     with:
       payload_artifact: amposix-amiga-q1
       profile: a1200-020-os3
-      runtime_image: ghcr.io/ploos-as/amiga-runtime:sha-c2003ff
+      runtime_image: ghcr.io/ploos-as/amiga-runtime:sha-4f65937
+      runner: self-hosted
