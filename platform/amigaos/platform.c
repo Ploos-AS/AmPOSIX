@@ -5,6 +5,9 @@
 #include <devices/timer.h>
 #include <proto/exec.h>
 #include <proto/timer.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
 #include "platform.h"
 
 struct Device *TimerBase;
@@ -84,5 +87,18 @@ int amposix_platform_nanosleep(const struct amposix_timespec *request,
   remaining->tv_sec=0;
   remaining->tv_nsec=0;
  }
+ return 0;
+}
+
+int amposix_platform_resolve_ipv4(const char *node,unsigned char address[4])
+{
+ struct hostent *host;
+ const unsigned char *p;
+ host=gethostbyname(node);
+ if(!host||host->h_addrtype!=AF_INET||host->h_length!=4||
+    !host->h_addr_list||!host->h_addr_list[0])
+  return AMPOSIX_EAI_NONAME;
+ p=(const unsigned char *)host->h_addr_list[0];
+ address[0]=p[0];address[1]=p[1];address[2]=p[2];address[3]=p[3];
  return 0;
 }
