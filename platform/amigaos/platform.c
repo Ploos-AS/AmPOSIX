@@ -38,5 +38,32 @@ int amposix_platform_clock_gettime(int id,struct amposix_timespec*ts)
  if(id==AMPOSIX_CLOCK_MONOTONIC)return monotonic_eclock(ts);
  (void)ts;errno=ENOSYS;return -1;
 }
-int amposix_platform_nanosleep(const struct amposix_timespec*r,struct amposix_timespec*o)
-{(void)r;(void)o;errno=ENOSYS;return -1;}
+int amposix_platform_nanosleep(const struct amposix_timespec *request,
+                              struct amposix_timespec *remaining)
+{
+ struct timerequest tr;
+ unsigned long seconds;
+ unsigned long micros;
+
+ seconds=(unsigned long)request->tv_sec;
+ micros=((unsigned long)request->tv_nsec+999UL)/1000UL;
+ if(micros>=1000000UL){seconds++;micros-=1000000UL;}
+
+ memset(&tr,0,sizeof(tr));
+ if(OpenDevice(TIMERNAME,UNIT_MICROHZ,(struct IORequest *)&tr,0)!=0){
+  errno=EIO;
+  return -1;
+ }
+
+ tr.tr_node.io_Command=TR_ADDREQUEST;
+ tr.tr_time.tv_secs=seconds;
+ tr.tr_time.tv_micro=micros;
+ DoIO((struct IORequest *)&tr);
+ CloseDevice((struct IORequest *)&tr);
+
+ if(remaining){
+  remaining->tv_sec=0;
+  remaining->tv_nsec=0;
+ }
+ return 0;
+}
