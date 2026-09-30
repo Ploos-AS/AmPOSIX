@@ -19,6 +19,7 @@
       "AmPOSIX qualification 0.1.0",
       "PASS strdup",
       "PASS strlcpy",
+      "PASS realtime",
       "PASS monotonic",
       "PASS nanosleep",
       "AMPOSIX-RC-PASS"
