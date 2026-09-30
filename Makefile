@@ -92,6 +92,6 @@ build/amiga/probe-datestamp.o: qualification/probes/datestamp.c | build/amiga
 	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
 amiga-probes: $(AMIGA_PROBES)
 build/amiga/probe-getaddrinfo.o: qualification/probes/getaddrinfo.c | build/amiga
-	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
+	$(AMIGA_CC) $(AMIGA_CFLAGS) -Werror=implicit-function-declaration -c -o $@ $<
 build/amiga/probe-gethostbyname.o: qualification/probes/gethostbyname.c | build/amiga
 	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
