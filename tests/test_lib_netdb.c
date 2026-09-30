@@ -16,5 +16,6 @@ int main(void)
  rc=amposix_getaddrinfo("localhost","http",&hints,&ai);check(rc==AMPOSIX_EAI_SERVICE,"named service rejected");
  hints.ai_family=99;rc=amposix_getaddrinfo("localhost","80",&hints,&ai);check(rc==AMPOSIX_EAI_FAMILY,"family rejected");
  check(strcmp(amposix_gai_strerror(AMPOSIX_EAI_SERVICE),"service not supported")==0,"gai strerror");
+ if (fails == 0) puts("libamposix netdb: PASS");
  return fails?1:0;
 }
