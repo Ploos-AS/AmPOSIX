@@ -36,5 +36,17 @@ static const struct amposix_feature amposix_features[] = {
  {"sigaction",AMPOSIX_SUPPORT_ADAPT,"signals","Unix signal semantics do not map directly to AmigaOS."},
  {"sigprocmask",AMPOSIX_SUPPORT_ADAPT,"signals","Unix signal-mask semantics do not map directly to AmigaOS."}
 };
+static const char *amposix_feature_support_name(enum amposix_support support)
+{
+ switch(support){
+ case AMPOSIX_SUPPORT_NATIVE:return "native";
+ case AMPOSIX_SUPPORT_HEADER:return "header";
+ case AMPOSIX_SUPPORT_LIBRARY:return "library";
+ case AMPOSIX_SUPPORT_ADAPT:return "adapt";
+ case AMPOSIX_SUPPORT_UNSUPPORTED:return "unsupported";
+ case AMPOSIX_SUPPORT_INVESTIGATE:return "investigate";
+ default:return "unknown";
+ }
+}
 #define AMPOSIX_FEATURE_COUNT (sizeof(amposix_features)/sizeof(amposix_features[0]))
 #endif
