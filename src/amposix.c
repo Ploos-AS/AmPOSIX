@@ -45,7 +45,9 @@ static void scan_includes(const char *path,const char *original){
  while(*p){const char *e=strchr(p,'\n');size_t len=e?(size_t)(e-p):strlen(p);const char *q=p;size_t i;
   while(q<p+len&&isspace((unsigned char)*q))q++;
   if(q<p+len&&*q=='#'){q++;while(q<p+len&&isspace((unsigned char)*q))q++;if((size_t)(p+len-q)>=7&&!strncmp(q,"include",7)){q+=7;while(q<p+len&&isspace((unsigned char)*q))q++;if(q<p+len&&(*q=='<'||*q=='"')){char end=*q=='<'?'>':'"';char name[256];size_t k=0;q++;while(q<p+len&&*q!=end&&k+1<sizeof(name))name[k++]=*q++;name[k]=0;for(i=0;i<AMPOSIX_HEADER_COUNT;i++)if(!strcmp(name,amposix_headers[i].name)){{struct amposix_finding f={path,ln,"include",name,amposix_headers[i].class_name,"header",amposix_headers[i].note};amposix_output_finding(output_format,&f);total_findings++;}}}}}
-  if(!e)break;\n  p=e+1;\n  ln++;
+  if(!e)break;
+  p=e+1;
+  ln++;
  }
 }
 static int scan_file(const char *path){
