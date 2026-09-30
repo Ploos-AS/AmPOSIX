@@ -31,7 +31,7 @@ const struct amposix_capability *amposix_capability_find(const char *name)
 
     for (i = 0; i < AMPOSIX_FEATURE_COUNT; ++i) {
         if (strcmp(name, amposix_features[i].name) == 0)
-            return (const struct amposix_capability *)&amposix_features[i];
+            return &amposix_features[i];
     }
 
     return NULL;
