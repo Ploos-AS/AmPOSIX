@@ -83,7 +83,7 @@ build/amiga/payload: build/amiga/amposix-qualification qualification/amiga-runti
 	cp qualification/run-amiga-qualification $@/
 amiga-payload: build/amiga/payload
 
-AMIGA_PROBES = build/amiga/probe-read-eclock.o build/amiga/probe-timer-device.o build/amiga/probe-datestamp.o
+AMIGA_PROBES = build/amiga/probe-read-eclock.o build/amiga/probe-timer-device.o build/amiga/probe-datestamp.o build/amiga/probe-getaddrinfo.o build/amiga/probe-gethostbyname.o
 build/amiga/probe-read-eclock.o: qualification/probes/read-eclock.c | build/amiga
 	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
 build/amiga/probe-timer-device.o: qualification/probes/timer-device.c | build/amiga
@@ -91,3 +91,7 @@ build/amiga/probe-timer-device.o: qualification/probes/timer-device.c | build/am
 build/amiga/probe-datestamp.o: qualification/probes/datestamp.c | build/amiga
 	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
 amiga-probes: $(AMIGA_PROBES)
+build/amiga/probe-getaddrinfo.o: qualification/probes/getaddrinfo.c | build/amiga
+	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
+build/amiga/probe-gethostbyname.o: qualification/probes/gethostbyname.c | build/amiga
+	$(AMIGA_CC) $(AMIGA_CFLAGS) -c -o $@ $<
