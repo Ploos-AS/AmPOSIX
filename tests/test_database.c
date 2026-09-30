@@ -29,7 +29,7 @@ int main(void)
     int errors = 0;
 
     for (i = 0; i < AMPOSIX_FEATURE_COUNT; ++i) {
-        const struct amposix_feature *feature = &amposix_features[i];
+        const struct amposix_capability *feature = &amposix_features[i];
 
         if (!feature->name[0] || !feature->area[0] ||
             !valid_support(feature->support)) {
