@@ -3,6 +3,11 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <string.h>
 
 #include "platform.h"
 
@@ -72,4 +77,31 @@ int amposix_platform_nanosleep(const struct amposix_timespec *request,
     }
 
     return rc;
+}
+
+int amposix_platform_resolve_ipv4(const char *node, unsigned char address[4])
+{
+    struct addrinfo hints;
+    struct addrinfo *result = 0;
+    struct addrinfo *it;
+    int rc;
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    rc = getaddrinfo(node, 0, &hints, &result);
+    if (rc != 0)
+        return AMPOSIX_EAI_NONAME;
+
+    for (it = result; it; it = it->ai_next) {
+        if (it->ai_family == AF_INET && it->ai_addr) {
+            const struct sockaddr_in *sin = (const struct sockaddr_in *)it->ai_addr;
+            const unsigned char *p = (const unsigned char *)&sin->sin_addr;
+            address[0] = p[0]; address[1] = p[1];
+            address[2] = p[2]; address[3] = p[3];
+            freeaddrinfo(result);
+            return 0;
+        }
+    }
+    freeaddrinfo(result);
+    return AMPOSIX_EAI_NONAME;
 }
