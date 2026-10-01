@@ -5,9 +5,13 @@
 #include <devices/timer.h>
 #include <proto/exec.h>
 #include <proto/timer.h>
+#define __USE_INLINE__
+#include <proto/bsdsocket.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+
+struct Library *SocketBase = NULL;
 #include "platform.h"
 
 struct Device *TimerBase;
@@ -102,14 +106,6 @@ int amposix_platform_resolve_ipv4(const char *node,unsigned char address[4])
  address[0]=p[0];address[1]=p[1];address[2]=p[2];address[3]=p[3];
  return 0;
 }
-#include <errno.h>
-#include <stddef.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#define __USE_INLINE__
-#include <proto/bsdsocket.h>
-
-struct Library *SocketBase = NULL;
 #include "net_platform.h"
 int amposix_platform_socket(int d,int t,int p){return socket(d,t,p);}
 int amposix_platform_connect(int f,const void *a,size_t n){return connect(f,(struct sockaddr *)a,(long)n);}
