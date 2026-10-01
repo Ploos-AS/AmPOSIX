@@ -107,9 +107,11 @@ int amposix_platform_resolve_ipv4(const char *node,unsigned char address[4])
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <proto/socket.h>
+
+struct Library *SocketBase = NULL;
 #include "net_platform.h"
 int amposix_platform_socket(int d,int t,int p){return socket(d,t,p);}
-int amposix_platform_connect(int f,const void *a,size_t n){return connect(f,(const struct sockaddr *)a,(long)n);}
+int amposix_platform_connect(int f,const void *a,size_t n){return connect(f,(struct sockaddr *)a,(long)n);}
 int amposix_platform_close_socket(int f){return CloseSocket(f);}
 int amposix_platform_select(int n,void *r,void *w,void *e,void *t){return WaitSelect(n,(fd_set *)r,(fd_set *)w,(fd_set *)e,(struct timeval *)t,0);}
 int amposix_platform_shutdown(int f,int h){return shutdown(f,h);}
