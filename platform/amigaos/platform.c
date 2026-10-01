@@ -102,7 +102,7 @@ int amposix_platform_resolve_ipv4(const char *node,unsigned char address[4])
  address[0]=p[0];address[1]=p[1];address[2]=p[2];address[3]=p[3];
  return 0;
 }
-\n#include <errno.h>
+#include <errno.h>
 #include <stddef.h>
 #include <sys/types.h>
 #include <sys/socket.h>
