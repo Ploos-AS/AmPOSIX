@@ -106,7 +106,8 @@ int amposix_platform_resolve_ipv4(const char *node,unsigned char address[4])
 #include <stddef.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <proto/socket.h>
+#define __USE_INLINE__
+#include <proto/bsdsocket.h>
 
 struct Library *SocketBase = NULL;
 #include "net_platform.h"
