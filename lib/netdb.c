@@ -16,7 +16,8 @@ int amposix_getaddrinfo(const char *node,const char *service,
  const struct amposix_addrinfo_hints *hints,struct amposix_addrinfo **result)
 {
  struct amposix_addrinfo *ai; unsigned short port; int rc;
- if(!result)return AMPOSIX_EAI_FAIL; *result=0;
+ if(!result)return AMPOSIX_EAI_FAIL;
+ *result=0;
  if(!node||!*node)return AMPOSIX_EAI_NONAME;
  if(hints&&hints->ai_family!=AMPOSIX_AF_UNSPEC&&hints->ai_family!=AMPOSIX_AF_INET)return AMPOSIX_EAI_FAMILY;
  rc=parse_service(service,&port);if(rc)return rc;
