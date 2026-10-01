@@ -1,5 +1,6 @@
 /* AmigaOS platform backend. */
 #include <errno.h>
+#include <sys/types.h>
 #include <string.h>
 #include <exec/io.h>
 #include <devices/timer.h>
@@ -7,7 +8,6 @@
 #include <proto/timer.h>
 #define __USE_INLINE__
 #include <proto/bsdsocket.h>
-#include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 
@@ -96,7 +96,7 @@ int amposix_platform_nanosleep(const struct amposix_timespec *request,
 
 int amposix_platform_resolve_ipv4(const char *node,unsigned char address[4])
 {
- struct hostent *host;
+ const struct hostent *host;
  const unsigned char *p;
  host=gethostbyname(node);
  if(!host||host->h_addrtype!=AF_INET||host->h_length!=4||
