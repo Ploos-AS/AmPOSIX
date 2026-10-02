@@ -98,7 +98,7 @@ int amposix_platform_resolve_ipv4(const char *node,unsigned char address[4])
 {
  const struct hostent *host;
  const unsigned char *p;
- host=(const struct hostent *)gethostbyname(node);
+ host=gethostbyname(node);
  if(!host||host->h_addrtype!=AF_INET||host->h_length!=4||
     !host->h_addr_list||!host->h_addr_list[0])
   return AMPOSIX_EAI_NONAME;
