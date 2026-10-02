@@ -6,7 +6,6 @@
 #include <arpa/inet.h>
 #include <amposix/net.h>
 #include <amposix/netdb.h>
-#include <amposix/time.h>
 
 static unsigned short parse_port(const char *s)
 {
@@ -28,6 +27,8 @@ int main(int argc, char **argv)
     char buffer[256];
     size_t i;
     int n;
+    amposix_fd_set readfds;
+    amposix_timeval timeout;
 
     if (argc != 3 || !parse_port(argv[2])) return 2;
     memset(&hints, 0, sizeof(hints));
@@ -54,6 +55,15 @@ int main(int argc, char **argv)
         buffer[i++] = (char)ch;
     }
     if (i && amposix_send(fd, buffer, i, 0) < 0) {
+        amposix_close_socket(fd);
+        return 1;
+    }
+    FD_ZERO(&readfds);
+    FD_SET(fd, &readfds);
+    timeout.tv_sec = 5;
+    timeout.tv_usec = 0;
+    n = amposix_select(fd + 1, &readfds, 0, 0, &timeout);
+    if (n <= 0 || !FD_ISSET(fd, &readfds)) {
         amposix_close_socket(fd);
         return 1;
     }
