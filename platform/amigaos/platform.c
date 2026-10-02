@@ -98,7 +98,7 @@ int amposix_platform_resolve_ipv4(const char *node,unsigned char address[4])
 {
  const struct hostent *host;
  const unsigned char *p;
- host=gethostbyname(node);
+ host=(const struct hostent *)gethostbyname(node);
  if(!host||host->h_addrtype!=AF_INET||host->h_length!=4||
     !host->h_addr_list||!host->h_addr_list[0])
   return AMPOSIX_EAI_NONAME;
@@ -110,7 +110,7 @@ int amposix_platform_resolve_ipv4(const char *node,unsigned char address[4])
 int amposix_platform_socket(int d,int t,int p){return socket(d,t,p);}
 int amposix_platform_connect(int f,const void *a,size_t n){return connect(f,(struct sockaddr *)a,(long)n);}
 int amposix_platform_close_socket(int f){return CloseSocket(f);}
-int amposix_platform_select(int n,void *r,void *w,void *e,void *t){return WaitSelect(n,(fd_set *)r,(fd_set *)w,(fd_set *)e,(struct timeval *)t,0);}
+int amposix_platform_select(int n,fd_set *r,fd_set *w,fd_set *e,struct timeval *t){return WaitSelect(n,r,w,e,t,0);}
 int amposix_platform_shutdown(int f,int h){return shutdown(f,h);}
 
 int amposix_platform_send(int f,const void *b,size_t n,int flags){return send(f,(void *)b,(long)n,flags);}
