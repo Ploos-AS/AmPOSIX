@@ -22,7 +22,10 @@
       "PASS realtime",
       "PASS monotonic",
       "PASS nanosleep",
-      "AMPOSIX-RC-PASS"
+      "AMPOSIX-RC-PASS",
+      "PASS socket",
+      "PASS select",
+      "PASS socket-close"
     ]
   },
   "policy": {
