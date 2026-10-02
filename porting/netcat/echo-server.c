@@ -24,6 +24,8 @@ int main(int argc, char **argv)
     sa.sin_port = htons((unsigned short)port);
     if (bind(s, (struct sockaddr *)&sa, sizeof(sa)) < 0) return 1;
     if (listen(s, 1) < 0) return 1;
+    fprintf(stderr, "READY\\n");
+    fflush(stderr);
     c = accept(s, 0, 0);
     if (c < 0) return 1;
     n = recv(c, buf, sizeof(buf) - 1, 0);
