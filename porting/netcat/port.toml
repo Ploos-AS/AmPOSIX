@@ -1,8 +1,8 @@
 name = "netcat"
+version = "0.1"
 level = 2
 kind = "network"
-source = "representative portable C"
-build = "amposix"
-runtime = "amiga-q4"
-changes = "TBD"
-requires = ["socket", "connect", "select", "getaddrinfo"]
+source = "porting/netcat/netcat.c"
+source_changes = 0
+runtime_dependency = true
+requires = ["getaddrinfo", "socket", "connect"]
