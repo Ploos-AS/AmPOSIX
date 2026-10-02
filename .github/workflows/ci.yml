@@ -46,3 +46,5 @@ jobs:
           test -s porting/hello/port.toml
           cc -std=c89 -Wall -Wextra -Werror -o /tmp/amposix-port-hello porting/hello/hello.c
           /tmp/amposix-port-hello | grep -q "Hello from AmPOSIX Porting Lab!"
+          cc -std=c89 -Wall -Wextra -Werror -o /tmp/amposix-port-cat porting/cat/cat.c
+          printf 'port-lab-cat\\n' | /tmp/amposix-port-cat | grep -qx 'port-lab-cat'
