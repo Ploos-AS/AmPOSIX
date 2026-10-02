@@ -48,3 +48,5 @@ jobs:
           /tmp/amposix-port-hello | grep -q "Hello from AmPOSIX Porting Lab!"
           cc -std=c89 -Wall -Wextra -Werror -o /tmp/amposix-port-cat porting/cat/cat.c
           printf 'port-lab-cat\\n' | /tmp/amposix-port-cat | grep -qx 'port-lab-cat'
+          cc -std=c89 -Wall -Wextra -Werror -o /tmp/amposix-port-grep porting/grep/grep.c
+          printf 'alpha\\nneedle here\\nomega\\n' | /tmp/amposix-port-grep needle | grep -qx 'needle here'
