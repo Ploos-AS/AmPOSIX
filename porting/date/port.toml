@@ -1,0 +1,8 @@
+name = "date"
+level = 2
+kind = "time"
+source = "representative portable C"
+build = "amposix"
+runtime = "amiga-q4"
+changes = 0
+requires = ["clock_gettime"]
