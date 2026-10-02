@@ -26,6 +26,7 @@ int main(int argc, char **argv)
     int fd;
     char buffer[256];
     size_t i;
+    int n;
 
     if (argc != 3 || !parse_port(argv[2])) return 2;
     memset(&hints, 0, sizeof(hints));
@@ -55,6 +56,13 @@ int main(int argc, char **argv)
         amposix_close_socket(fd);
         return 1;
     }
+    n = amposix_recv(fd, buffer, sizeof(buffer) - 1, 0);
+    if (n < 0) {
+        amposix_close_socket(fd);
+        return 1;
+    }
+    buffer[n] = 0;
+    fputs(buffer, stdout);
     amposix_close_socket(fd);
     return 0;
 }
