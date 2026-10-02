@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <amposix/net.h>
 #include <amposix/netdb.h>
+#include <amposix/time.h>
 
 static unsigned short parse_port(const char *s)
 {
