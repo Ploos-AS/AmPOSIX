@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -24,14 +23,11 @@ int main(int argc, char **argv)
     struct amposix_addrinfo_hints hints;
     struct amposix_addrinfo *ai = 0;
     struct sockaddr_in sa;
-    unsigned short port;
     int fd;
     char buffer[256];
     size_t i;
 
-    if (argc != 3) return 2;
-    port = parse_port(argv[2]);
-    if (!port) return 2;
+    if (argc != 3 || !parse_port(argv[2])) return 2;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AMPOSIX_AF_INET;
     hints.ai_socktype = AMPOSIX_SOCK_STREAM;
@@ -50,16 +46,14 @@ int main(int argc, char **argv)
         return 1;
     }
     i = 0;
-    while (i < sizeof(buffer)-1) {
+    while (i < sizeof(buffer) - 1) {
         int ch = getchar();
         if (ch == EOF) break;
         buffer[i++] = (char)ch;
     }
-    if (i) {
-        if (send(fd, buffer, i, 0) < 0) {
-            amposix_close_socket(fd);
-            return 1;
-        }
+    if (i && send(fd, buffer, i, 0) < 0) {
+        amposix_close_socket(fd);
+        return 1;
     }
     amposix_close_socket(fd);
     return 0;
