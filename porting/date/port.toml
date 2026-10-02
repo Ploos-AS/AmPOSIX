@@ -1,8 +1,8 @@
 name = "date"
+version = "0.1"
 level = 2
 kind = "time"
-source = "representative portable C"
-build = "amposix"
-runtime = "amiga-q4"
-changes = 0
-requires = ["clock_gettime"]
+source = "porting/date/date.c"
+source_changes = 0
+runtime_dependency = true
+requires = ["clock_gettime", "realtime"]
