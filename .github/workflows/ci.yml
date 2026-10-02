@@ -54,3 +54,5 @@ jobs:
           test "$(printf 'one two\\nthree\\n' | /tmp/amposix-port-wc)" = "2 3 14"
           cc -std=c89 -Wall -Wextra -Werror -Iinclude -o /tmp/amposix-port-date porting/date/date.c lib/time.c platform/host/platform.c
           test "$(/tmp/amposix-port-date)" -gt 0
+          cc -std=c89 -Wall -Wextra -Werror -Iinclude -o /tmp/amposix-port-sleep porting/sleep/sleep.c lib/time.c platform/host/platform.c
+          test "$(/tmp/amposix-port-sleep)" = "slept"
