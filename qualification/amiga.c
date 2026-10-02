@@ -8,6 +8,7 @@
 #include <amposix/env.h>
 #include <amposix/time.h>
 #include <amposix/net.h>
+#include <sys/socket.h>
 static int pass=0,fail=0,skip=0;
 static void result(const char*n,int ok){printf("%s %s\n",ok?"PASS":"FAIL",n);if(ok)pass++;else fail++;}
 static void skipped(const char*n,const char*why){printf("SKIP %s: %s\n",n,why);skip++;}
