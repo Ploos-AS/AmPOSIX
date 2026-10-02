@@ -112,3 +112,6 @@ int amposix_platform_connect(int f,const void *a,size_t n){return connect(f,(str
 int amposix_platform_close_socket(int f){return CloseSocket(f);}
 int amposix_platform_select(int n,void *r,void *w,void *e,void *t){return WaitSelect(n,(fd_set *)r,(fd_set *)w,(fd_set *)e,(struct timeval *)t,0);}
 int amposix_platform_shutdown(int f,int h){return shutdown(f,h);}
+
+int amposix_platform_send(int f,const void *b,size_t n,int flags){return send(f,(void *)b,(long)n,flags);}
+int amposix_platform_recv(int f,void *b,size_t n,int flags){return recv(f,b,(long)n,flags);}
