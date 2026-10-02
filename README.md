@@ -59,6 +59,10 @@ Existing portable/POSIX C software
 
 Networking should use native Amiga networking interfaces where appropriate. Threading, synchronization, timing and process-related compatibility should map to AmigaOS primitives when semantics can be represented honestly.
 
+## Porting Lab
+
+AmPOSIX is validated against real portable-C programs, not only synthetic API tests. The Porting Lab records source-change cost, compatibility level, build result, runtime qualification and semantic limitations for representative programs. Initial targets are hello, cat, grep, wc, date, sleep, netcat and a small IRC client.
+
 ## Porting assistant
 
 A central long-term feature is the `amposix` command-line tool. M0 defines the intended interface; implementation follows in later milestones.
