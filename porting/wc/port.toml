@@ -1,0 +1,7 @@
+name = "wc"
+level = 0
+kind = "baseline"
+source = "representative portable C"
+build = "native"
+runtime = "host-and-amiga"
+changes = 0
