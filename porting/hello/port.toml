@@ -1,7 +1,9 @@
 name = "hello"
+version = "0.1"
 level = 0
 kind = "baseline"
-source = "representative portable C"
-build = "native"
-runtime = "host-and-amiga"
-changes = 0
+source = "porting/hello/hello.c"
+source_changes = 0
+runtime_dependency = false
+host_command = "cc -std=c89 -Wall -Wextra -o hello hello.c"
+amiga_command = "m68k-amigaos-gcc -Wall -Wextra -o hello hello.c"
