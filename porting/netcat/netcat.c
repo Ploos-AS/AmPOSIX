@@ -51,7 +51,7 @@ int main(int argc, char **argv)
         if (ch == EOF) break;
         buffer[i++] = (char)ch;
     }
-    if (i && send(fd, buffer, i, 0) < 0) {
+    if (i && amposix_send(fd, buffer, i, 0) < 0) {
         amposix_close_socket(fd);
         return 1;
     }
