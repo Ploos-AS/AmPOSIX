@@ -1,6 +1,13 @@
 name: Amiga runtime qualification
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'qualification/**'
+      - 'platform/amigaos/**'
+      - 'lib/**'
+      - 'include/**'
+      - '.github/workflows/amiga-runtime.yml'
 permissions:
   contents: read
   packages: read
